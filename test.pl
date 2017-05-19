@@ -1,5 +1,5 @@
 /* carregando arquivo base */
-:- ensure_loaded(q1).
+:- ensure_loaded(mina).
 
 doSome(X, L1, ToWrite, L2):-
 	insOrd(X, L1, L2),
