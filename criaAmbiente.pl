@@ -53,23 +53,26 @@ preencheVizinhança([X,Y|Minas],TabulInicio, TabulFim) :-
 	preencheVizinhança(Minas, TabulFim, TabulFim).
 
 
-/* verificar as dimensões */
+
+/* Verifica se já chegou à ultima casa do tabuleiro */
 iniciaTabuleiro(Linha, Coluna, X, Y, [X,Y,0]) :-
-	X = Linha - 1,
-	Y = Coluna - 1.
+	X = Linha ,
+	Y = Coluna .
+
+/*  Verifica se chegou ao fim da Linha*/
 iniciaTabuleiro(Linha,Coluna,X, Y, Tabul):-
-	X < Linha - 1,
-	Y = Coluna -1,
+	X < Linha,
+	Y = Coluna,
 	X2 is X + 1,
 	Y is 0
 	iniciaTabuleiro(Linha, Coluna, X2, Y, Tabul)
 
+/* Verifica se ainda pode andar sobre as colunas da linha*/
 iniciaTabuleiro(Linha, Coluna, X, Y, [[X, Y, 0]|Tabul) :-
-	X < Linha - 1,
-	Y < Coluna - 1,
+	X < Linha,
+	Y < Coluna,
 	Y2 is Y + 1,
 	iniciaTabuleiro(Linha, Coluna, X, Y2, Tabul)
-
 
 
 
@@ -93,7 +96,7 @@ preparaJogo(ToWrite):-
 	/*find all minas em Minas*/
 	findAll([X,Y], mina(X,Y),Minas),
 	/*preenche o tab de zeros a menos que seja mina - iniciaTabuleiro*/
-	iniciaTabuleiro(Linhas,Colunas, 0, 0, Tabul),
+	iniciaTabuleiro(Linhas,Colunas, 1, 1, Tabul),
 	/*preenche os vizinhos de cada mina (lista de vizinhos) - preencheVizinhança*/
 	preencheVizinhança(Minas,Tabul,TabulFim),
 	escrita(TabulFim,ToWrite).
