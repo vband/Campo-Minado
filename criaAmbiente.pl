@@ -54,9 +54,9 @@ preencheVizinhança([X,Y|Minas],TabulInicio, TabulFim) :-
 
 
 /* verificar as dimensões */
-iniciaTabuleiro(Linha, Coluna, X, Y, []) :-
-	X = Linha -1.
-
+iniciaTabuleiro(Linha, Coluna, X, Y, [X,Y,0]) :-
+	X = Linha - 1,
+	Y = Coluna - 1.
 iniciaTabuleiro(Linha,Coluna,X, Y, Tabul):-
 	X < Linha - 1,
 	Y = Coluna -1,
