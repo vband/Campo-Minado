@@ -1,4 +1,4 @@
-/* carregando arquivo base /
+/* carregando arquivo base */
 :- ensure_loaded(minas).
 
 escreve([X,Y,Z|L], ToWrite):-
@@ -9,7 +9,7 @@ escreve([X,Y,Z|L], ToWrite):-
 	write(ToWrite,","),
 	write(ToWrite,Z).
 
-/* acho que da pra juntar as duas /
+/* acho que da pra juntar as duas */
 escrita([], ToWrite).
 escrita([X|L], ToWrite):-
 	escrita(L, ToWrite),
@@ -18,8 +18,8 @@ escrita([X|L], ToWrite):-
 	write(ToWrite,")"
 
 
-/* se achei a coordenada no tabuleiro, /
-/* preencho TabulFim /
+/* se achei a coordenada no tabuleiro, */
+/* preencho TabulFim */
 
 atualiza([],_,_,[]).
 
@@ -30,21 +30,26 @@ atualiza([X,Y,Valor1|TabulInicio],Xviz,Yviz,[X,Y,Valor2|TabulFim):-
 	atualiza(TabulInicio, Xviz, Yviz, TabulFim) /* manter o restante da tabela/
 
 atualiza([X,Y,Valor1|TabulInicio],Xviz,Yviz,[X,Y,Valor1|TabulFim):-
-	/* verificar essa condicao /
+	/* verificar essa condicao */
 	atualiza(TabulInicio, Xviz, Yviz, TabulFim).
-	
+
 
 incrementaMina(TabulInicio, [Xviz,Yviz|MinViz], TabulFim2):-
-	atualiza(TabulInicio,Xviz,Yviz, TabulFim1) 	/* atualizo um vizinho /
-	incrementaMina(TabulFim1, Xviz, Yviz, TabulFim2) 	/* passo para o proximo viznho/
-														/* e atualizo o tabuleiro ja iterado/
+	/* atualizo um vizinho */
+	atualiza(TabulInicio,Xviz,Yviz, TabulFim1)
+	/* passo para o proximo viznho*/
+	incrementaMina(TabulFim1, Xviz, Yviz, TabulFim2)
+														/* e atualizo o tabuleiro ja iterado*/
 
 preencheVizinhança([], TabulFim, TabulFim).
 
 preencheVizinhança([X,Y|Minas],TabulInicio, TabulFim) :-
-	vizinhosMina([X,Y], MinViz), 	/* coleta os vizinhos da mina /
-	incrementaMina(TabulInicio,MinViz,TabulFim),	/* incrementa cada vizinho /
-	preencheVizinhança(Minas, TabulFim, TabulFim),	/* proxima mina /
+	/* coleta os vizinhos da mina */
+	vizinhosMina([X,Y], MinViz),
+	/* incrementa cada vizinho */
+	incrementaMina(TabulInicio,MinViz,TabulFim),
+	/* proxima mina */
+	preencheVizinhança(Minas, TabulFim, TabulFim),
 
 
 /* verificar as dimensões
@@ -76,7 +81,7 @@ preparaJogo(ToWrite):-
 	escrita(TabulFim,ToWrite)
 
 
-start(X, L1, L2):-
+start():-
 	open("ambiente.pl", write, makeToWrite),
 	preparaJogo(ToWrite),
 	close(ToWrite).
