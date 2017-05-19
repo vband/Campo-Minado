@@ -8,6 +8,6 @@ doSome(X, L1, ToWrite, L2):-
 	write(ToWrite,")\n Fim").
 
 start(X, L1, L2):-
-	open("testeAmbiente.pl", write, makeToWrite),
+	open("testeAmbiente.pl", write, ToWrite),
 	doSome(X, L1,ToWrite, L2),
 	close(ToWrite).
