@@ -91,7 +91,7 @@ vizinhosMina([X,Y], [UL,UC,UR,CR,LR,LC,LL,CL]):-
 
 preparaJogo(ToWrite):-
 	/*find all minas em Minas*/
-	findAll([X,Y], minas(X,Y),Minas),
+	findAll([X,Y], mina(X,Y),Minas),
 	/*preenche o tab de zeros a menos que seja mina - iniciaTabuleiro*/
 	iniciaTabuleiro(Linhas,Colunas, 0, 0, Tabul),
 	/*preenche os vizinhos de cada mina (lista de vizinhos) - preencheVizinhança*/
@@ -99,7 +99,7 @@ preparaJogo(ToWrite):-
 	escrita(TabulFim,ToWrite).
 
 
-start():-
+start(ToWrite):-
 	open("ambiente.pl", write, ToWrite),
 	preparaJogo(ToWrite),
 	close(ToWrite).
