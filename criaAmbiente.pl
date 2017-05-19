@@ -1,5 +1,6 @@
 /* carregando arquivo base */
-:- ensure_loaded(minas).
+:- ensure_loaded(mina).
+
 
 escreve([X,Y,Z|L], ToWrite):-
 	L = [],
@@ -13,9 +14,9 @@ escreve([X,Y,Z|L], ToWrite):-
 escrita([], ToWrite).
 escrita([X|L], ToWrite):-
 	escrita(L, ToWrite),
-	write(ToWrite,"valor(")
-	escreve(X, ToWrite)
-	write(ToWrite,")"
+	write(ToWrite,"valor("),
+	escreve(X, ToWrite),
+	write(ToWrite,")").
 
 
 /* se achei a coordenada no tabuleiro, */
@@ -23,40 +24,40 @@ escrita([X|L], ToWrite):-
 
 atualiza([],_,_,[]).
 
-atualiza([X,Y,Valor1|TabulInicio],Xviz,Yviz,[X,Y,Valor2|TabulFim):-
+atualiza([X,Y,Valor1|TabulInicio],Xviz,Yviz,[X,Y,Valor2|TabulFim]):-
 	X = Xviz,
 	Y = Yviz,
-	Valor2 is Valor1 + 1.
-	atualiza(TabulInicio, Xviz, Yviz, TabulFim) /* manter o restante da tabela/
+	Valor2 is Valor1 + 1,
+	/* manter o restante da tabela*/
+	atualiza(TabulInicio, Xviz, Yviz, TabulFim).
 
-atualiza([X,Y,Valor1|TabulInicio],Xviz,Yviz,[X,Y,Valor1|TabulFim):-
+atualiza([X,Y,Valor1|TabulInicio],Xviz,Yviz,[X,Y,Valor1|TabulFim]):-
 	/* verificar essa condicao */
 	atualiza(TabulInicio, Xviz, Yviz, TabulFim).
 
 
 incrementaMina(TabulInicio, [Xviz,Yviz|MinViz], TabulFim2):-
 	/* atualizo um vizinho */
-	atualiza(TabulInicio,Xviz,Yviz, TabulFim1)
+	atualiza(TabulInicio,Xviz,Yviz, TabulFim1),
 	/* passo para o proximo viznho*/
-	incrementaMina(TabulFim1, Xviz, Yviz, TabulFim2)
+	incrementaMina(TabulFim1, Xviz, Yviz, TabulFim2).
 														/* e atualizo o tabuleiro ja iterado*/
 
 preencheVizinhança([], TabulFim, TabulFim).
-
 preencheVizinhança([X,Y|Minas],TabulInicio, TabulFim) :-
 	/* coleta os vizinhos da mina */
 	vizinhosMina([X,Y], MinViz),
 	/* incrementa cada vizinho */
 	incrementaMina(TabulInicio,MinViz,TabulFim),
 	/* proxima mina */
-	preencheVizinhança(Minas, TabulFim, TabulFim),
+	preencheVizinhança(Minas, TabulFim, TabulFim).
 
 
 /* verificar as dimensões
-iniciaTabuleiro() :-
+iniciaTabuleiro() :-*/
 
-
-vizinhosMina([X,Y], [UL,UC,UR,CR,LR,LC,LL,CL]):- /* ul - UPPER LEFT, uc - UPPER CENTER, [...]*/
+/* ul - UPPER LEFT, uc - UPPER CENTER, [...]*/
+vizinhosMina([X,Y], [UL,UC,UR,CR,LR,LC,LL,CL]):-
 	X1 is X+1,
 	X2 is X-1,
 	Y1 is Y+1,
@@ -75,13 +76,13 @@ preparaJogo(ToWrite):-
 	/*find all minas em Minas*/
 	findAll([X,Y], minas(X,Y),Minas),
 	/*preenche o tab de zeros a menos que seja mina - iniciaTabuleiro*/
-	iniciaTabuleiro(Linhas,Colunas,Tabul)
+	/*iniciaTabuleiro(Linhas,Colunas,Tabul),*/
 	/*preenche os vizinhos de cada mina (lista de vizinhos) - preencheVizinhança*/
-	preencheVizinhança(Minas,Tabul,TabulFim)
-	escrita(TabulFim,ToWrite)
+	preencheVizinhança(Minas,Tabul,TabulFim),
+	escrita(TabulFim,ToWrite).
 
 
 start():-
-	open("ambiente.pl", write, makeToWrite),
+	open("ambiente.pl", write, ToWrite),
 	preparaJogo(ToWrite),
 	close(ToWrite).
