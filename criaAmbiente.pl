@@ -16,7 +16,7 @@ escrita([X|L], ToWrite):-
 	escrita(L, ToWrite),
 	write(ToWrite,"valor("),
 	escreve(X, ToWrite),
-	write(ToWrite,") \n").
+	write(ToWrite,"). \n").
 
 
 /* se achei a coordenada no tabuleiro, */
