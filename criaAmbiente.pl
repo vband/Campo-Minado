@@ -62,7 +62,7 @@ iniciaTabuleiro(Linha, Coluna, X, Y, [[X,Y,0]]) :-
 	!.
 
 /*  Verifica se chegou ao fim da Linha*/
-iniciaTabuleiro(Linha,Coluna,X, Y, Tabul):-
+iniciaTabuleiro(Linha,Coluna,X, Y, [[X, Y, 0]|Tabul]):-
 	X =< Linha,
 	Y = Coluna,
 	!,
