@@ -13,10 +13,10 @@ escreve([X,Y,Z|L], ToWrite):-
 /* acho que da pra juntar as duas */
 escrita([], ToWrite).
 escrita([X|L], ToWrite):-
-	escrita(L, ToWrite),
 	write(ToWrite,"valor("),
 	escreve(X, ToWrite),
-	write(ToWrite,") \n").
+	write(ToWrite,"). \n"),
+	escrita(L, ToWrite).
 
 
 /* se achei a coordenada no tabuleiro, */
