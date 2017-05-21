@@ -54,6 +54,32 @@ preencheVizinhança([ [X,Y] |Minas],TabulInicio, TabulFim2) :-
 	/* proxima mina */
 	preencheVizinhança(Minas, TabulFim, TabulFim2).
 
+/* */ 
+/* Verifica se já chegou à ultima casa do tabuleiro */
+iniciaTabuleiro(Linha, Coluna, X, Y, []) :-
+	mina(X,Y),
+	X = Linha,
+	Y = Coluna,
+	!.
+
+/*  Verifica se chegou ao fim da Linha*/
+iniciaTabuleiro(Linha,Coluna,X, Y, Tabul):-
+	mina(X,Y),
+	X =< Linha,
+	Y = Coluna,
+	!,
+	X2 is X + 1,
+	Y2 is 0,
+	iniciaTabuleiro(Linha, Coluna, X2, Y2, Tabul).
+
+/* Verifica se ainda pode andar sobre as colunas da linha*/
+iniciaTabuleiro(Linha, Coluna, X, Y, Tabul) :-
+	mina(X,Y),
+	X =< Linha,
+	Y < Coluna,
+	!,
+	Y2 is Y + 1,
+	iniciaTabuleiro(Linha, Coluna, X, Y2, Tabul).
 
 /* Verifica se já chegou à ultima casa do tabuleiro */
 iniciaTabuleiro(Linha, Coluna, X, Y, [[X,Y,0]]) :-
