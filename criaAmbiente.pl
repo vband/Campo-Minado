@@ -69,7 +69,7 @@ iniciaTabuleiro(Linha,Coluna,X, Y, Tabul):-
 	Y = Coluna,
 	!,
 	X2 is X + 1,
-	Y2 is 0,
+	Y2 is 1,
 	iniciaTabuleiro(Linha, Coluna, X2, Y2, Tabul).
 
 /* Verifica se ainda pode andar sobre as colunas da linha*/
@@ -93,7 +93,7 @@ iniciaTabuleiro(Linha,Coluna,X, Y, [[X, Y, 0]|Tabul]):-
 	Y = Coluna,
 	!,
 	X2 is X + 1,
-	Y2 is 0,
+	Y2 is 1,
 	iniciaTabuleiro(Linha, Coluna, X2, Y2, Tabul).
 
 /* Verifica se ainda pode andar sobre as colunas da linha*/
