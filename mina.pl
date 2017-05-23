@@ -5,3 +5,6 @@ tabuleiro(5).
 mina(2,1).
 mina(2,3).
 mina(4,5).
+
+testa2([]).
+testa(X,Y) :- findall([X,Y],mina(X,Y),Lista), testa2(Lista).
