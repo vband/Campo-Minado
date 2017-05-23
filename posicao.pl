@@ -1,13 +1,27 @@
 /* carregando arquivo base */
 :- ensure_loaded(mina).
 :- ensure_loaded(ambiente).
+:- ensure_loaded(mina).
 
 :- dynamic counter_jogo/1.
+:- dynamic old_positions/1.
+
 
 counter_jogo(1).
+old_positions([[-1,-1]]).
+
+/*verificando se uma posicao ja foi selecionada*/
+incluiVizinho(X, Y, L) :- append(L, [[X,Y]], C), assertz(old_positions(C)).
+
+testePosicao(X, Y, L) :- not(member([X, Y], L)), !, incluiVizinho(X, Y, L), true.
+testePosicao(X, Y, L) :- member([X, Y], L), !,
+                         assertz(old_positions(L)), false.
+tryPos(X, Y) :- retract(old_positions(L)), testePosicao(X, Y, L).
+
+
 
 /*imprime o valor da jogada*/
-imprimeJogada :-retract(counter_jogo(C)), write(C),
+imprimeJogada :-retract(counter_jogo(C)), 
                           C > 1, !,
                           open("jogo.pl", append, ToWrite),
                           write(ToWrite, '/*JOGADA '), write(ToWrite, C), C1 is C+1, assertz(counter_jogo(C1)),
@@ -33,17 +47,19 @@ imprimeAmbiente :-open("jogo.pl", append, ToWrite),
                   write(ToWrite, '/*AMBIENTE*/\n'), close(ToWrite).
 
 /*caso o jogador tenha escolhi uma posicao com mina, o jogo eh encerrado*/
-encerraJogo([]) :- imprimeAmbiente,
+encerraJogo(X, Y, []) :- imprimeAmbiente, tryPos(X, Y), !,
                    open("jogo.pl", append, ToWrite),
                    write(ToWrite, 'Jogo encerrado\n\n'),
                    close(ToWrite).
 
 /*caso contrario, imprime o valor encontrado naquela(s) posicao(oes)*/
 imprimeJogo([]).
-imprimeJogo([[X, Y, Valor]|L]) :- open("jogo.pl", append, ToWrite), write(ToWrite, 'valor('),
+imprimeJogo([[X, Y, Valor]|L]) :- tryPos(X, Y), !,
+                              open("jogo.pl", append, ToWrite), write(ToWrite, 'valor('),
                               write(ToWrite, X), write(ToWrite, ','), write(ToWrite, Y),
                               write(ToWrite, ','), write(ToWrite, Valor), write(ToWrite, ').\n'),
                               imprimeJogo(L), close(ToWrite).
+imprimeJogo([[X, Y, Valor]|L]) :- imprimeJogo(L).
 
 /*Func Auxiliares*/
 /* concatenação para elementos unicos na lista*/
@@ -84,7 +100,9 @@ verificaNull([]).
 verificaZero([ [_,_,Valor] ]) :-
     Valor = 0.
 
+
 /*acha vizinho por vizinho*/
+/*<<<<<<< HEAD */
 vizinhos([],_).
     
 /*Se as coordenadas nao estiverem definidas em Posicao(X,Y). Ex: out of bounds*/
@@ -110,6 +128,18 @@ vizinhos( [[X, Y]|L1], PosicoesFechadas ) :-
     \+(verificaZero(Posicao)),
     imprimePosAberta(Posicao),
     vizinhos(L1, [[X,Y]|PosicoesFechadas]).
+/*
+=======
+
+vizinhos([], L).
+vizinhos([[X, Y]|L1], [Posicoes|L2]) :- findall([X,Y, Valor], valor(X,Y, Valor), Posicoes), !,
+                                        /*verificaVizinho(Posicoes),*/
+                                        imprimeJogo(Posicoes),
+                                        vizinhos(L1, L2).
+vizinhos([[X, Y]|L1], L2) :- tryPos(X, Y), !, vizinhos(L1, L2).
+*/
+
+/* >>>>>>> b8aef581f97e3016b3fa0722cb0cc49c71a64a3b*/
 
 
 /*procura os valores dos vizinhos*/
@@ -126,10 +156,12 @@ achaVizinhos(X, Y, PosicoesAbertas, PosicoesFechadas) :-
 
 
 /*se a posicao for uma mina, dá-se jogo encerrado*/
-jogoEncerrado([X, Y], []) :- imprimeJogada, imprimePosicao(X, Y), encerraJogo([]).
+jogoEncerrado([X, Y], []) :- imprimeJogada, imprimePosicao(X, Y), encerraJogo(X, Y, []).
 /*se a posicao tiver um valor diferente de zero, imprime-a com seu valor no arquivo jogo.pl*/
 /*ordem: imprime o valor da jogada, imprime a posicao dada, imprime o ambiente e imprime o valor encontrado*/
-jogoEncerrado([X, Y], [[X, Y, Valor]]) :- Valor > 0, !, imprimeJogada, imprimePosicao(X, Y),
+jogoEncerrado([X, Y], [[X, Y, Valor]]) :- Valor > 0, !,
+
+                                          imprimeJogada, imprimePosicao(X, Y),
                                           imprimeAmbiente, imprimeJogo([[X, Y, Valor]]).
 /* se o valor na posicao for igual a zero, acha os seus vizinhos ainda nao procurados e imprime-os*/
 /*ordem: imprime o valor da jogada, imprime a posicao dada, imprime o ambiente e imprime os vizinhos*/
