@@ -126,7 +126,7 @@ preparaJogo(ToWrite):-
 	escrita(TabulFim,ToWrite).
 
 
-start():-
+inicio:-
 	open("ambiente.pl", write, ToWrite),
 	preparaJogo(ToWrite),
 	close(ToWrite).
