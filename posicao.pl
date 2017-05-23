@@ -2,8 +2,18 @@
 :- ensure_loaded(ambiente).
 
 :- dynamic counter_jogo/1.
+:- dynamic old_positions/1.
 
 counter_jogo(1).
+old_positions([[-1,-1]]).
+
+/*verificando se uma posicao ja foi selecionada*/
+incluiVizinho(X, Y, L) :- append(L, [[X,Y]], C), assertz(old_positions(C)).
+
+testePosicao(X, Y, L) :- not(member([X, Y], L)), !, write('estou aqui'),  incluiVizinho(X, Y, L), true.
+testePosicao(X, Y, L) :- write('estou aqui2'), write(L), member([X, Y], L), !,
+                         assertz(old_positions(L)), false.
+tryPos(X, Y) :- retract(old_positions(L)), write(L), testePosicao(X, Y, L).
 
 /*imprime o valor da jogada*/
 imprimeJogada :-retract(counter_jogo(C)), write(C),
@@ -26,17 +36,18 @@ imprimeAmbiente :-open("jogo.pl", append, ToWrite),
                   write(ToWrite, '/*AMBIENTE*/\n'), close(ToWrite).
 
 /*caso o jogador tenha escolhi uma posicao com mina, o jogo eh encerrado*/
-encerraJogo([]) :- imprimeAmbiente,
+encerraJogo([]) :- imprimeAmbiente, tryPos(X, Y), !,
                    open("jogo.pl", append, ToWrite),
                    write(ToWrite, 'Jogo encerrado\n\n'),
                    close(ToWrite).
 
 /*caso contrario, imprime o valor encontrado naquela(s) posicao(oes)*/
 imprimeJogo([]).
-imprimeJogo([[X, Y, Valor]|L]) :- open("jogo.pl", append, ToWrite), write(ToWrite, 'valor('),
-                              write(ToWrite, X), write(ToWrite, ','), write(ToWrite, Y),
-                              write(ToWrite, ','), write(ToWrite, Valor), write(ToWrite, ').\n'),
-                              imprimeJogo(L), close(ToWrite).
+imprimeJogo([[X, Y, Valor]|L]) :- tryPos(X, Y), !, 
+                                  open("jogo.pl", append, ToWrite), write(ToWrite, 'valor('),
+                                  write(ToWrite, X), write(ToWrite, ','), write(ToWrite, Y),
+                                  write(ToWrite, ','), write(ToWrite, Valor), write(ToWrite, ').\n'),
+                                  imprimeJogo(L), close(ToWrite).
 
 /*teste*/
 eVizinho([], L2).
@@ -50,7 +61,7 @@ verificaVizinho([[X, Y, Valor]|L]) :- write('estou aqui\n'), Valor = 0, verifica
 
 /*acha vizinho por vizinho*/
 vizinhos([], L).
-vizinhos([[X, Y]|L1], [Posicoes|L2]) :- findall([X,Y, Valor], valor(X,Y, Valor), Posicoes),
+vizinhos([[X, Y]|L1], [Posicoes|L2]) :- findall([X,Y, Valor], valor(X,Y, Valor), Posicoes), !,
                                         /*verificaVizinho(Posicoes),*/
                                         imprimeJogo(Posicoes),
                                         vizinhos(L1, L2).
