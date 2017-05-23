@@ -36,7 +36,7 @@ imprimeAmbiente :-open("jogo.pl", append, ToWrite),
                   write(ToWrite, '/*AMBIENTE*/\n'), close(ToWrite).
 
 /*caso o jogador tenha escolhi uma posicao com mina, o jogo eh encerrado*/
-encerraJogo([]) :- imprimeAmbiente, tryPos(X, Y), !,
+encerraJogo(X, Y, []) :- imprimeAmbiente, tryPos(X, Y), !,
                    open("jogo.pl", append, ToWrite),
                    write(ToWrite, 'Jogo encerrado\n\n'),
                    close(ToWrite).
@@ -75,7 +75,7 @@ achaVizinhos(X, Y) :- X1 is X-1, X2 is X+1, Y1 is Y-1, Y2 is Y+1,
 
 
 /*se a posicao for uma mina, dá-se jogo encerrado*/
-jogoEncerrado([X, Y], []) :- imprimeJogada, imprimePosicao(X, Y), encerraJogo([]).
+jogoEncerrado([X, Y], []) :- imprimeJogada, imprimePosicao(X, Y), encerraJogo(X, Y, []).
 /*se a posicao tiver um valor diferente de zero, imprime-a com seu valor no arquivo jogo.pl*/
 /*ordem: imprime o valor da jogada, imprime a posicao dada, imprime o ambiente e imprime o valor encontrado*/
 jogoEncerrado([X, Y], [[X, Y, Valor]]) :- Valor > 0, !, imprimeJogada, imprimePosicao(X, Y),
