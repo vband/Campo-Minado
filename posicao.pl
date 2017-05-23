@@ -1,7 +1,6 @@
 /* carregando arquivo base */
 :- ensure_loaded(mina).
 :- ensure_loaded(ambiente).
-:- ensure_loaded(mina).
 
 :- dynamic counter_jogo/1.
 :- dynamic old_positions/1.
