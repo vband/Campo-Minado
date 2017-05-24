@@ -1,7 +1,7 @@
 /* carregando arquivo base */
 :- ensure_loaded(mina).
 
-
+/*escreve em ambiente.pl suas posicoes e valores*/
 escreve([X,Y,Z|L], ToWrite):-
 	L = [],
 	write(ToWrite,X),
@@ -9,8 +9,6 @@ escreve([X,Y,Z|L], ToWrite):-
 	write(ToWrite,Y),
 	write(ToWrite,","),
 	write(ToWrite,Z).
-
-/* acho que da pra juntar as duas */
 escrita([], ToWrite).
 escrita([X|L], ToWrite):-
 	write(ToWrite,"valor("),
@@ -23,7 +21,6 @@ escrita([X|L], ToWrite):-
 /* preencho TabulFim */
 
 atualiza([],_,_,[]).
-
 atualiza([ [X,Y,Valor1] |TabulInicio],Xviz,Yviz,[ [X,Y,Valor2] |TabulFim]):-
 	X = Xviz,
 	Y = Yviz,
@@ -31,11 +28,11 @@ atualiza([ [X,Y,Valor1] |TabulInicio],Xviz,Yviz,[ [X,Y,Valor2] |TabulFim]):-
 	Valor2 is Valor1 + 1,
 	/* manter o restante da tabela*/
 	atualiza(TabulInicio, Xviz, Yviz, TabulFim).
-
 atualiza([ [X,Y,Valor1] |TabulInicio],Xviz,Yviz,[ [X,Y,Valor1] |TabulFim]):-
 	/* verificar essa condicao */
 	atualiza(TabulInicio, Xviz, Yviz, TabulFim).
 
+/*incrementa os vizinhos de uma mina*/
 incrementaMina(Tabul,[],Tabul).
 incrementaMina(TabulInicio, [ [Xviz,Yviz] | MinViz], TabulFim2):-
 	/* atualizo um vizinho */
@@ -44,7 +41,7 @@ incrementaMina(TabulInicio, [ [Xviz,Yviz] | MinViz], TabulFim2):-
 	incrementaMina(TabulFim1, MinViz, TabulFim2).
 	/* e atualizo o tabuleiro ja iterado*/
 
-
+/*preenche os vizinhos*/
 preencheVizinhança([], Tabul, Tabul).
 preencheVizinhança([ [X,Y] |Minas],TabulInicio, TabulFim2) :-
 	/* coleta os vizinhos da mina */
@@ -112,7 +109,7 @@ vizinhosMina([X,Y],[[X2,Y1],[X,Y1],[X1,Y1],[X1,Y], [X1,Y2],[X ,Y2] ,[X2,Y2] , [X
 	Y1 is Y+1,
 	Y2 is Y-1.
 
-
+/*organiza a criacao do ambiente*/
 preparaJogo(ToWrite):-
 	/*find all minas em Minas*/
 	findall([X,Y], mina(X,Y),Minas),
@@ -125,7 +122,7 @@ preparaJogo(ToWrite):-
 	/*escreve as posicoes */
 	escrita(TabulFim,ToWrite).
 
-
+/*inicio para escrita do ambiente*/
 inicio:-
 	open("ambiente.pl", write, ToWrite),
 	preparaJogo(ToWrite),
