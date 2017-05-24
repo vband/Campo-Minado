@@ -116,13 +116,13 @@ vizinhosMina([X,Y],[[X2,Y1],[X,Y1],[X1,Y1],[X1,Y], [X1,Y2],[X ,Y2] ,[X2,Y2] , [X
 preparaJogo(ToWrite):-
 	/*find all minas em Minas*/
 	findall([X,Y], mina(X,Y),Minas),
-	/* */
+	/*resgata dimensoes do tabuleiro */
 	tabuleiro(Dimensoes),
 	/*preenche o tab de zeros a menos que seja mina - iniciaTabuleiro*/
 	iniciaTabuleiro(Dimensoes,Dimensoes, 1, 1, Tabul),
 	/*preenche os vizinhos de cada mina (lista de vizinhos) - preencheVizinhança*/
 	preencheVizinhança(Minas,Tabul,TabulFim),
-	/* */
+	/*escreve as posicoes */
 	escrita(TabulFim,ToWrite).
 
 
