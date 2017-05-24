@@ -71,17 +71,20 @@ concUni(X,[Y|L1],[Y|L2]):-
     concUni(X,L1,L2).
 
 /* Une os novos vizinhos aos já percorridos */
+/* caso base - lista ja foi percorrida ou tentou-se unir lista vazia*/
 novosVizinhos([],L,_,L).
-/* se o vizinho não estiver nesta lista, e é adicionado*/
+/* se o vizinho nao estiver nesta lista, e eh adicionado*/
 novosVizinhos([X|L1], L2, PosicoesFechadas, Lfinal):-
-  notMember(X,PosicoesFechadas),
-  !,
-  concUni(X,L2,L3),
-  novosVizinhos(L1,L3, PosicoesFechadas, Lfinal).
+    notMember(X,PosicoesFechadas),
+    !,
+    /* L2 -> lista destino, L3 -> lista produto da uniao*/
+    concUni(X,L2,L3),
+    /* verifico proximo elemento a ser unido a lista*/
+    novosVizinhos(L1,L3, PosicoesFechadas, Lfinal).
 /* do contrário...*/
 novosVizinhos([X|L1], L2, PosicoesFechadas, Lfinal):-
-  member(X,PosicoesFechadas),
-  novosVizinhos(L1, L2, PosicoesFechadas, Lfinal).
+    member(X,PosicoesFechadas),
+    novosVizinhos(L1, L2, PosicoesFechadas, Lfinal).
 
 /* verificacao se X nao eh membro de uma lista */
 notMember(X,[Y|[]]) :-
@@ -117,8 +120,8 @@ vizinhos( [[X, Y]|L1], PosicoesFechadas) :-
     findall([X,Y, Valor], valor(X,Y, Valor), Posicao),
     verificaZero(Posicao), 
     !,
-    /* achar os seus vizinhos e empilha-los caso eles ainda nao tenham sido descobertos*/
     imprimePosAberta(Posicao),
+    /* achar os seus vizinhos e empilha-los caso eles ainda nao tenham sido descobertos*/
     achaVizinhos(X, Y, L1, [[X,Y]|PosicoesFechadas]).
     
 /*se a posicao tiver N minas em volta, so Imprime ela */
@@ -126,6 +129,7 @@ vizinhos( [[X, Y]|L1], PosicoesFechadas ) :-
     findall([X,Y, Valor], valor(X,Y, Valor), Posicao),
     \+(verificaZero(Posicao)),
     imprimePosAberta(Posicao),
+    /* verificar proximos vizinhos encontrados porem nao fechados*/
     vizinhos(L1, [[X,Y]|PosicoesFechadas]).
 /*
 =======
@@ -138,7 +142,7 @@ vizinhos([[X, Y]|L1], [Posicoes|L2]) :- findall([X,Y, Valor], valor(X,Y, Valor),
 vizinhos([[X, Y]|L1], L2) :- tryPos(X, Y), !, vizinhos(L1, L2).
 */
 
-/* >>>>>>> b8aef581f97e3016b3fa0722cb0cc49c71a64a3b*/
+/* >>>>>>> b8aef581f97e3016b3fa0722cb0cc49c71a64a3b */
 
 
 /*procura os valores dos vizinhos*/
