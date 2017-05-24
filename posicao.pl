@@ -131,8 +131,7 @@ vizinhos( [[X, Y]|L1], PosicoesFechadas ) :-
     imprimePosAberta(Posicao),
     /* verificar proximos vizinhos encontrados porem nao fechados*/
     vizinhos(L1, [[X,Y]|PosicoesFechadas]).
-/*
-=======
+
 
 vizinhos([], L).
 vizinhos([[X, Y]|L1], [Posicoes|L2]) :- findall([X,Y, Valor], valor(X,Y, Valor), Posicoes), !,
@@ -140,9 +139,7 @@ vizinhos([[X, Y]|L1], [Posicoes|L2]) :- findall([X,Y, Valor], valor(X,Y, Valor),
                                         imprimeJogo(Posicoes),
                                         vizinhos(L1, L2).
 vizinhos([[X, Y]|L1], L2) :- tryPos(X, Y), !, vizinhos(L1, L2).
-*/
 
-/* >>>>>>> b8aef581f97e3016b3fa0722cb0cc49c71a64a3b */
 
 
 /*procura os valores dos vizinhos*/
